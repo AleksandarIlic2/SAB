@@ -1,0 +1,271 @@
+CREATE TABLE [Administrator]
+( 
+	[IdKor]              integer  NOT NULL 
+)
+go
+
+CREATE TABLE [Grad]
+( 
+	[IdGra]              integer  IDENTITY  NOT NULL ,
+	[Naziv]              varchar(100)  NULL ,
+	[Broj]               varchar(100)  NULL 
+)
+go
+
+CREATE TABLE [Korisnik]
+( 
+	[IdKor]              integer  IDENTITY  NOT NULL ,
+	[Ime]                varchar(100)  NULL ,
+	[Prezime]            varchar(100)  NULL ,
+	[korIme]             varchar(100)  NULL ,
+	[Sifra]              varchar(100)  NULL ,
+	[BrojPaketa]         integer  NULL 
+)
+go
+
+CREATE TABLE [Kurir]
+( 
+	[IdKor]              integer  NOT NULL ,
+	[VoziloId]           integer  NOT NULL ,
+	[BrojPaketaIsporucenih] integer  NULL ,
+	[Status]             integer  NULL ,
+	[Profit]             decimal(10,3)  NULL 
+)
+go
+
+CREATE TABLE [Opstina]
+( 
+	[IdOps]              integer  IDENTITY  NOT NULL ,
+	[Naziv]              varchar(100)  NULL ,
+	[IdGra]              integer  NOT NULL ,
+	[kordinataX]         integer  NULL ,
+	[kordinataY]         integer  NULL 
+)
+go
+
+CREATE TABLE [Paket]
+( 
+	[IdPak]              integer  IDENTITY  NOT NULL ,
+	[IdOpst1]            integer  NOT NULL ,
+	[IdOpst2]            integer  NOT NULL ,
+	[IdKor]              integer  NULL ,
+	[Tezina]             decimal(10,3)  NULL ,
+	[Tip]                integer  NULL ,
+	[Status]             integer  NULL ,
+	[Cena]               decimal(10,3)  NULL ,
+	[VremePrihvatanja]   datetime  NULL ,
+	[IdKur]              integer  NULL 
+)
+go
+
+CREATE TABLE [Ponuda]
+( 
+	[IdPon]              integer  IDENTITY  NOT NULL ,
+	[IdPak]              integer  NOT NULL ,
+	[IdKor]              integer  NOT NULL ,
+	[Procenat]           char(18)  NULL 
+)
+go
+
+CREATE TABLE [Vozilo]
+( 
+	[IdVoz]              integer  IDENTITY  NOT NULL ,
+	[RegistracioniBroj]  varchar(100)  NULL ,
+	[TipGoriva]          integer  NULL ,
+	[Potrosnja]          decimal(10,3)  NULL 
+)
+go
+
+CREATE TABLE [Voznja]
+( 
+	[IdVoz]              integer  IDENTITY  NOT NULL ,
+	[Rb]                 integer  NULL ,
+	[Uzeto]              integer  NULL ,
+	[IdKur]              integer  NULL ,
+	[IdPak]              integer  NULL 
+)
+go
+
+CREATE TABLE [ZahtevZaKurira]
+( 
+	[IdZah]              integer  IDENTITY  NOT NULL ,
+	[IdVoz]              integer  NULL ,
+	[IdKor]              integer  NULL 
+)
+go
+
+ALTER TABLE [Administrator]
+	ADD CONSTRAINT [XPKAdministrator] PRIMARY KEY  CLUSTERED ([IdKor] ASC)
+go
+
+ALTER TABLE [Grad]
+	ADD CONSTRAINT [XPKGrad] PRIMARY KEY  CLUSTERED ([IdGra] ASC)
+go
+
+ALTER TABLE [Korisnik]
+	ADD CONSTRAINT [XPKKorisnik] PRIMARY KEY  CLUSTERED ([IdKor] ASC)
+go
+
+ALTER TABLE [Kurir]
+	ADD CONSTRAINT [XPKKurir] PRIMARY KEY  CLUSTERED ([IdKor] ASC)
+go
+
+ALTER TABLE [Opstina]
+	ADD CONSTRAINT [XPKOpstina] PRIMARY KEY  CLUSTERED ([IdOps] ASC)
+go
+
+ALTER TABLE [Paket]
+	ADD CONSTRAINT [XPKPaket] PRIMARY KEY  CLUSTERED ([IdPak] ASC)
+go
+
+ALTER TABLE [Ponuda]
+	ADD CONSTRAINT [XPKPonuda] PRIMARY KEY  CLUSTERED ([IdPon] ASC)
+go
+
+ALTER TABLE [Vozilo]
+	ADD CONSTRAINT [XPKVozilo] PRIMARY KEY  CLUSTERED ([IdVoz] ASC)
+go
+
+ALTER TABLE [Voznja]
+	ADD CONSTRAINT [XPKVoznja] PRIMARY KEY  CLUSTERED ([IdVoz] ASC)
+go
+
+ALTER TABLE [ZahtevZaKurira]
+	ADD CONSTRAINT [XPKZahtevZaKurira] PRIMARY KEY  CLUSTERED ([IdZah] ASC)
+go
+
+
+ALTER TABLE [Administrator]
+	ADD CONSTRAINT [R_1] FOREIGN KEY ([IdKor]) REFERENCES [Korisnik]([IdKor])
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
+go
+
+
+ALTER TABLE [Kurir]
+	ADD CONSTRAINT [R_2] FOREIGN KEY ([IdKor]) REFERENCES [Korisnik]([IdKor])
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
+go
+
+ALTER TABLE [Kurir]
+	ADD CONSTRAINT [R_3] FOREIGN KEY ([VoziloId]) REFERENCES [Vozilo]([IdVoz])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+
+ALTER TABLE [Opstina]
+	ADD CONSTRAINT [R_4] FOREIGN KEY ([IdGra]) REFERENCES [Grad]([IdGra])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+
+ALTER TABLE [Paket]
+	ADD CONSTRAINT [R_5] FOREIGN KEY ([IdOpst1]) REFERENCES [Opstina]([IdOps])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+ALTER TABLE [Paket]
+	ADD CONSTRAINT [R_6] FOREIGN KEY ([IdOpst2]) REFERENCES [Opstina]([IdOps])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+ALTER TABLE [Paket]
+	ADD CONSTRAINT [R_7] FOREIGN KEY ([IdKor]) REFERENCES [Korisnik]([IdKor])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+
+ALTER TABLE [Ponuda]
+	ADD CONSTRAINT [R_8] FOREIGN KEY ([IdPak]) REFERENCES [Paket]([IdPak])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+ALTER TABLE [Ponuda]
+	ADD CONSTRAINT [R_9] FOREIGN KEY ([IdKor]) REFERENCES [Korisnik]([IdKor])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+
+ALTER TABLE [ZahtevZaKurira]
+	ADD CONSTRAINT [R_11] FOREIGN KEY ([IdVoz]) REFERENCES [Vozilo]([IdVoz])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+ALTER TABLE [ZahtevZaKurira]
+	ADD CONSTRAINT [R_15] FOREIGN KEY ([IdKor]) REFERENCES [Korisnik]([IdKor])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+USE [ia210495]
+GO
+/****** Object:  StoredProcedure [dbo].[OdobriZahtev]    Script Date: 7/9/2024 6:21:23 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER   PROCEDURE [dbo].[OdobriZahtev]
+	@korImeParametar NVARCHAR(40),
+	@flag INT OUTPUT
+AS
+BEGIN
+	declare @IdKor INT
+
+	SELECT @IdKor = IdKor
+	FROM Korisnik
+	WHERE korIme = @korImeParametar
+
+	if @IdKor IS NULL
+	begin
+		set @flag = -1;
+		return;
+	end
+
+	declare @IdVoz INT
+	SELECT @IdVoz = IdVoz
+	FROM ZahtevZaKurira
+	WHERE IdKor = @IdKor
+	
+	if @IdVoz IS NULL
+	begin
+		set @flag = -1;
+		return;
+	end
+	set @flag = 0;
+	INSERT INTO Kurir(IdKor, VoziloId, BrojPaketaIsporucenih, Status, Profit) VALUES(@IdKor, @IdVoz, 0, 0, 0)
+	DELETE FROM ZahtevZaKurira WHERE IdKor = @IdKor
+END
+
+USE [ia210495]
+GO
+/****** Object:  Trigger [dbo].[ObrisiPonude]    Script Date: 7/9/2024 6:29:27 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE or ALTER TRIGGER [dbo].[TR_TransportOffer_]
+   ON  [dbo].[Paket]
+   AFTER UPDATE
+AS 
+BEGIN
+	
+	declare @tempPaket int;
+
+	set @tempPaket = (select IdPak FROM inserted WHERE Status = 1)
+	select @tempPaket;
+	if @tempPaket IS NOT NULL
+	begin
+		DELETE FROM Ponuda WHERE IdPak = @tempPaket
+	end
+
+END

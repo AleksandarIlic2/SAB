@@ -1,0 +1,38 @@
+USE [ia210495]
+GO
+/****** Object:  StoredProcedure [dbo].[OdobriZahtev]    Script Date: 7/9/2024 6:24:29 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER   PROCEDURE [dbo].[OdobriZahtev]
+	@korImeParametar NVARCHAR(40),
+	@flag INT OUTPUT
+AS
+BEGIN
+	declare @IdKor INT
+
+	SELECT @IdKor = IdKor
+	FROM Korisnik
+	WHERE korIme = @korImeParametar
+
+	if @IdKor IS NULL
+	begin
+		set @flag = -1;
+		return;
+	end
+
+	declare @IdVoz INT
+	SELECT @IdVoz = IdVoz
+	FROM ZahtevZaKurira
+	WHERE IdKor = @IdKor
+	
+	if @IdVoz IS NULL
+	begin
+		set @flag = -1;
+		return;
+	end
+	set @flag = 0;
+	INSERT INTO Kurir(IdKor, VoziloId, BrojPaketaIsporucenih, Status, Profit) VALUES(@IdKor, @IdVoz, 0, 0, 0)
+	DELETE FROM ZahtevZaKurira WHERE IdKor = @IdKor
+END

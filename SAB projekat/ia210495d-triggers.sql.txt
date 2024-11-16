@@ -1,0 +1,24 @@
+USE [ia210495]
+GO
+/****** Object:  Trigger [dbo].[ObrisiPonude]    Script Date: 7/9/2024 6:29:27 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE or ALTER TRIGGER [dbo].[TR_TransportOffer_]
+   ON  [dbo].[Paket]
+   AFTER UPDATE
+AS 
+BEGIN
+	
+	declare @tempPaket int;
+
+	set @tempPaket = (select IdPak FROM inserted WHERE Status = 1)
+	select @tempPaket;
+	if @tempPaket IS NOT NULL
+	begin
+		DELETE FROM Ponuda WHERE IdPak = @tempPaket
+	end
+
+END
